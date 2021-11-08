@@ -1,3 +1,3 @@
 # Prolibu integration bolierplate
 
-Start a new integration in Prolibu platform from this repo
+Start a new integration with Prolibu platform from this repo
