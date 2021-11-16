@@ -1,0 +1,60 @@
+{
+  "createdBy": {
+    "description": "User who created the resource",
+    "model": "user",
+    "required": true,
+    "skipAll": true
+  },
+  "updatedBy": {
+    "description": "Last user who updated the resource",
+    "model": "user",
+    "required": true,
+    "skipAll": true
+  },
+  "createdAt": {
+    "type": "datetime",
+    "skipAll": true
+  },
+  "updatedAt": {
+    "type": "datetime",
+    "skipAll": true
+  },
+  "uuid": {
+    "required": true,
+    "unique": true,
+    "primaryKey": true,
+    "type": "string"
+  },
+  "agent": {
+    "required": true,
+    "type": "json"
+  },
+  "lead": {
+    "required": true,
+    "type": "json"
+  },
+  "data": {
+    "required": true,
+    "type": "json"
+  },
+  "proposal": {
+    "model": "proposal",
+    "skipAll": true
+  },
+  "leadUrl": {
+    "type": "string",
+    "skipAll": true
+  },
+  "anonymousUrl": {
+    "type": "string",
+    "skipAll": true
+  },
+  "resolvedUrl": {
+    "type": "string",
+    "skipAll": true
+  },
+  "proposalVersion": {
+    "type": "string",
+    "skipAll": true
+  }
+}
