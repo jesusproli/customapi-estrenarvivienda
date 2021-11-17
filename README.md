@@ -3,6 +3,8 @@
 Start a new integration with Prolibu platform from this repo
 
 
+## Instalation
+
 #### Clone this repo 
 ```bash
 git clone https://github.com/prolibu-docs/customObjectBoilerplate.git escappy-dev
@@ -23,6 +25,16 @@ remote -v
 ```bash
 mv .env.demo .env
 ```
+
+## Configuration
+
+#### Update .env data
+
+- PROLIBU_ACCOUNT: URL prolibu account, for example int-dev.nodriza.io
+
+- PROLIBU_API_KEY: [Generate Api Key](https://github.com/prolibu-docs/docs/blob/main/api-key.md)
+
+- PROLIBU_SECRET: Request to software provider
 
 
 ---------------
