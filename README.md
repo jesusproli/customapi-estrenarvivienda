@@ -3,7 +3,7 @@
 Start a new integration with Prolibu platform from this repo
 
 
-## Instalation
+## installation
 
 #### Clone this repo 
 ```bash
