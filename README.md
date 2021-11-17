@@ -2,8 +2,7 @@
 
 Start a new integration with Prolibu platform from this repo
 
-
-## installation
+## Installation
 
 #### Clone this repo 
 ```bash
