@@ -17,7 +17,7 @@ git remote add origin https://github.com/prolibu-docs/customApi-escappy-dev.git
 
 #### Check new orgin 
 ```bash
-remote -v
+git remote -v
 ```
 
 #### Rename eviroment file
