@@ -12,7 +12,7 @@ git clone https://github.com/prolibu-docs/customObjectBoilerplate.git project-na
 #### Update repo origin 
 ```bash
 git remote rm origin
-git remote add origin https://github.com/prolibu-docs/customApi-escappy-dev.git
+git remote add origin https://github.com/prolibu-docs/customApi-project-name.git
 ```
 
 #### Check new orgin 
