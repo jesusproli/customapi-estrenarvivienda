@@ -6,7 +6,7 @@ Start a new integration with Prolibu platform from this repo
 
 #### Clone this repo 
 ```bash
-git clone https://github.com/prolibu-docs/customObjectBoilerplate.git escappy-dev
+git clone https://github.com/prolibu-docs/customObjectBoilerplate.git project-name
 ```
 
 #### Update repo origin 
