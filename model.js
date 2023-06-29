@@ -10,6 +10,7 @@ module.exports = {
       let proposalId = ''
       const status = prlbu._.get(params, 'status')
       const proposalNumber = prlbu._.get(params, 'uuid')
+      let emailRand = ''
       
       const tasks = {
         validateIfProposalExist: (callback) => {
@@ -142,8 +143,145 @@ module.exports = {
               callback('[afterValidate.getHostCompany]:  ' + error)
             }
           },
+          validateAgent: (callback) => {
+            const email = prlbu._.get(agent, 'email')
+            const city = prlbu._.get(agent, 'city')
+            prlbu.console.log('city --->', city)
+            
+            if(email == 'notiene@prolibu.com'){
+              
+              prlbu.models.User.native((err, collection) => {
+                if (err) return callback(err)
+
+                const aggregate = [
+                  {
+                    $lookup: {
+                      from: 'role_user__user_role',
+                      localField: '_id',
+                      foreignField: 'user_role',
+                      as: 'user_role'
+                    }
+                  },
+                  {
+                    $project: {
+                      email: '$email',
+                      city: '$city',
+                      role: {
+                        $arrayElemAt: [ "$user_role", 0 ]
+                      }
+                    }
+                  },
+                  {
+                    $match: {
+                      'city': { $regex: city , $options: 'i' },
+                      $or: [
+                        { 'role.role_user': 'agent' },
+                        { 'role.role_user': 'agente' },
+                      ]
+                    }
+                  },
+                  {
+                    $sample: {
+                      size: 1
+                    }
+                  }
+                ]
+
+
+                const aggregate2 = [
+                  {
+                    $lookup: {
+                      from: 'role_user__user_role',
+                      localField: '_id',
+                      foreignField: 'user_role',
+                      as: 'user_role'
+                    }
+                  },
+                  {
+                    $project: {
+                      email: '$email',
+                      city: '$city',
+                      role: {
+                        $arrayElemAt: [ "$user_role", 0 ]
+                      }
+                    }
+                  },
+                  {
+                    $match: {
+                      $or: [
+                        { 'role.role_user': 'agent' },
+                        { 'role.role_user': 'agente' },
+                      ]
+                    }
+                  },
+                  {
+                    $sample: {
+                      size: 1
+                    }
+                  }
+                ]
+
+                let subject = 'Te han asignado una propuesta Comercial: '
+                let body = `
+                <p style="font-size: 16px"><strong>Hola,</strong></p>
+                Te Han asignado una propuesta Comercial en Prolibu
+              `
+
+                collection.aggregate(aggregate, { cursor: {}, maxTimeMS: 0, allowDiskUse: true }).toArray((err, docs) => {
+                  prlbu.console.log('docs ------>', docs)
+                  if (err) return callback(err)
+                  if(docs.length == 0){
+                    collection.aggregate(aggregate2, { cursor: {}, maxTimeMS: 0, allowDiskUse: true }).toArray((err2, docs2) => {
+                      prlbu.console.log('docs2 --->', docs2)
+                      if (err2) return callback(err)
+                      docs2.forEach(row2 => {
+                        agent.email = row2.email
+                        mail = {
+                          to: agent.email,
+                          subject: subject,
+                          body: body,
+                          actionBtn: {
+                            name: 'Ir a prolibu',
+                            url: prlbu.u.getAppUrl()
+                          }
+                        }
+      
+                        prlbu.models.Email.send(mail, (err) => {
+                          //err ? callback(err) : callback()
+                        })
+                      })
+                      callback()
+                    })  
+                  }else{
+                    docs.forEach(row => {
+                      agent.email = row.email
+                      mail = {
+                        to: agent.email,
+                        subject: subject,
+                        body: body,
+                        actionBtn: {
+                          name: 'Ir a prolibu',
+                          url: prlbu.u.getAppUrl()
+                        }
+                      }
+    
+                      prlbu.models.Email.send(mail, (err) => {
+                        //err ? callback(err) : callback()
+                      })
+                    })
+                    callback()
+                  }
+                  
+                  
+                })
+              })
+            }
+           
+
+          },
           updateCreateAgent: (callback) => {
             try {
+              prlbu.console.log('agent --->', agent)
               const email = prlbu._.get(agent, 'email')
               const department = prlbu._.get(agent, 'department')
               let __doc = Object.assign(agent, {createdBy, updatedBy, company: hostCompany.id, type: 'host'})
@@ -297,6 +435,21 @@ module.exports = {
                 params.proposal = proposal.id
                 params.anonymousUrl = prlbu.u.getDocUrl('proposal', proposal.id)
                 params.resolvedUrl = prlbu.u.getDocUrl('proposal', proposal.id, params.lead.email)
+
+                /*mail = {
+                  to: params.lead.email,
+                  subject: 'Cotización ' + title,
+                  body: 'Este correo es para informarle que el documento "' + title +'" ha sido compartido con usted. Por favor haga clic en el enlace que aparece a continuación para verlo.',
+                  actionBtn: {
+                    name: 'Ver Documento',
+                    url: params.resolvedUrl
+                  }
+                }
+
+                prlbu.models.Email.send(mail, (err) => {
+                  //err ? callback(err) : callback()
+                })*/
+
                 callback()
               })
             } catch (error) {
